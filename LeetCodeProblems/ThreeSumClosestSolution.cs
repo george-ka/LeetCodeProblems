@@ -4,6 +4,10 @@ namespace LeetCodeChallenges
 {
     public class ThreeSumClosestSolution
     {
+        ///
+        /// 16. 3Sum Closest
+        /// https://leetcode.com/problems/3sum-closest/
+        ///
         public int ThreeSumClosest(int[] nums, int target)
         {
             // firstly, sort the input array
