@@ -15,10 +15,30 @@ namespace LeetCodeChallenges
                 throw new ArgumentNullException(nameof(root));
             }
 
-            var result = 0;
+            int sum = 0;
+            TraverseAndSumTree(root, 0, ref sum);
 
+            return sum;
+        }
 
-            return result;
+        private void TraverseAndSumTree(TreeNode node, int number, ref int sum)
+        {
+            number = number | node.val;
+            if (node.left == null && node.right == null)
+            {
+                sum += number;
+                return;
+            }
+
+            if (node.left != null)
+            {
+                TraverseAndSumTree(node.left, number << 1, ref sum);
+            }
+
+            if (node.right != null)
+            {
+                TraverseAndSumTree(node.right, number << 1, ref sum);
+            }
         }
 
         public class TreeNode 

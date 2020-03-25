@@ -13,8 +13,9 @@ namespace LeetCodeProblems
             // LeetCodeChallenges.QueensAttackingTheKingTests.RunTests();
             // LeetCodeChallenges.ThreeSumClosestTests.RunTests();
             // LeetCodeChallenges.IntegerToRomanTests.RunTests();
+            // LeetCodeChallenges.WordSearchTests.Test();
 
-            LeetCodeChallenges.WordSearchTests.Test();
+            LeetCodeChallenges.SumOfTheRootToLeafBinaryTests.Test();
         }
     }
 }
