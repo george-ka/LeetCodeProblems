@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using LeetCodeChallenges.DataStructures;
 
 namespace LeetCodeProblems
 {
@@ -11,6 +13,8 @@ namespace LeetCodeProblems
             // LeetCodeChallenges.QueensAttackingTheKingTests.RunTests();
             // LeetCodeChallenges.ThreeSumClosestTests.RunTests();
             // LeetCodeChallenges.IntegerToRomanTests.RunTests();
+
+            LeetCodeChallenges.WordSearchTests.Test();
         }
     }
 }
