@@ -14,9 +14,10 @@ namespace LeetCodeProblems
             // LeetCodeChallenges.ThreeSumClosestTests.RunTests();
             // LeetCodeChallenges.IntegerToRomanTests.RunTests();
             // LeetCodeChallenges.WordSearchTests.Test();
-            /// LeetCodeChallenges.SumOfTheRootToLeafBinaryTests.Test();
+            // LeetCodeChallenges.SumOfTheRootToLeafBinaryTests.Test();
+            // LeetCodeChallenges.BinaryTreeInorderTraversalTests.Test();
 
-            LeetCodeChallenges.BinaryTreeInorderTraversalTests.Test();
+            LeetCodeChallenges.PerfectSquaresTests.TrivialSamplesShouldWork();
         }
     }
 }
