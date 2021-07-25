@@ -28,6 +28,7 @@ namespace LeetCodeChallenges
                 throw new ArgumentException(nameof(target));
             }
 
+            Cache = new Dictionary<int, List<int>>();
             var split = SplitToSumOfPerfectNumbers(target, 10000, 0);
             if (split == null)
             {
@@ -39,6 +40,11 @@ namespace LeetCodeChallenges
         
         private List<int> SplitToSumOfPerfectNumbers(int target, int minNumberOfElementsInTheSum, int currentNumberOfElements)
         {
+            if (Cache.ContainsKey(target))
+            {
+                return Cache[target];
+            }
+
             Console.WriteLine($"    Split {target} {minNumberOfElementsInTheSum} {currentNumberOfElements}");
             if (currentNumberOfElements >= minNumberOfElementsInTheSum)
             {
@@ -84,6 +90,7 @@ namespace LeetCodeChallenges
                 Console.WriteLine($"    Subresult for {target}:" + string.Join(",", currentSumElements.ToArray()));
                 if (currentSumElements.Count == 2)
                 {
+                    Cache[target] = currentSumElements;
                     return currentSumElements;
                 }
                 
@@ -98,12 +105,15 @@ namespace LeetCodeChallenges
 
             if (result.Sum() == target)
             {
+                Cache[target] = result;
                 return result;
             }
             else
             {
                 return null;
-            }
-        }    
+            } 
+        }
+
+        private Dictionary<int, List<int>> Cache;
     }
 }
