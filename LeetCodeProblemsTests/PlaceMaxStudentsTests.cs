@@ -1,17 +1,14 @@
 using System;
+using NUnit.Framework;
+using LeetCodeChallenges;
 
-namespace LeetCodeChallenges
+namespace LeetCodeProblemsTests
 {
+    [TestFixture]
     public class PlaceMaxStudentsTests
     {
-        public static void RunTests()
-        {
-            //Test0();
-            //Test1();
-            Test2();
-        }
-
-        public static void Test0()
+        [Test]
+        public void Test0()
         {
             var seats = new char[][]
             {
@@ -21,11 +18,11 @@ namespace LeetCodeChallenges
 
             };
 
-            var solution = new PlaceMaxStudentsSolution();
-            solution.SetOnNextInteration(PrintIteration);
-            solution.MaxStudents(seats);
+            var result = CalculateMaxStudents(seats);
+            Assert.AreEqual(4, result);
         }
 
+        [Test]
         public static void Test1()
         {
             var seats = new char[][]
@@ -41,11 +38,11 @@ namespace LeetCodeChallenges
                 new char[] { '.', '.',  '.', '#', '.' }
             };
 
-            var solution = new PlaceMaxStudentsSolution();
-            solution.SetOnNextInteration(PrintIteration);
-            solution.MaxStudents(seats);
+            var result = CalculateMaxStudents(seats);
+            Assert.AreEqual(17, result);
         }
 
+        [Test]
         public static void Test2()
         {
             var seats = new char[][]
@@ -57,9 +54,15 @@ namespace LeetCodeChallenges
                 new char[] {'#','.','#','#','.'}
             };
 
+            var result = CalculateMaxStudents(seats);
+            Assert.AreEqual(7, result);
+        }
+
+        private static int CalculateMaxStudents(char[][] seats)
+        {
             var solution = new PlaceMaxStudentsSolution();
             solution.SetOnNextInteration(PrintIteration);
-            solution.MaxStudents(seats);
+            return solution.MaxStudents(seats);
         }
 
         private static void PrintIteration(string description, char[][] seats)
@@ -77,7 +80,7 @@ namespace LeetCodeChallenges
                 Console.WriteLine();
             }
 
-            Console.ReadLine();
+            // Console.ReadLine();
         }
     }
 }

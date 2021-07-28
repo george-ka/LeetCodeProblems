@@ -17,7 +17,6 @@ namespace LeetCodeProblems
             // LeetCodeChallenges.SumOfTheRootToLeafBinaryTests.Test();
             // LeetCodeChallenges.BinaryTreeInorderTraversalTests.Test();
             // LeetCodeChallenges.PerfectSquaresTests.TrivialSamplesShouldWork();
-            LeetCodeChallenges.PlaceMaxStudentsTests.RunTests();
         }
     }
 }

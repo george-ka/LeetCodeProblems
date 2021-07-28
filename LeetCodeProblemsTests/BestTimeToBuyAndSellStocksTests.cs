@@ -1,8 +1,10 @@
+using System;
 using NUnit.Framework;
-using LeetCodeProblems;
+using LeetCodeChallenges;
 
 namespace LeetCodeProblemsTests
 {
+    [TestFixture]
     public class BestTimeToBuyAndSellStocksTests
     {
         [SetUp]
