@@ -1,10 +1,14 @@
 using System;
+using NUnit.Framework;
+using LeetCodeChallenges;
 
-namespace LeetCodeChallenges
+namespace LeetCodeProblemsTests
 {
+    [TestFixture]
     class SumOfTheRootToLeafBinaryTests
     {
-        public static void Test()
+        [Test]
+        public void SumOfTheRootToLeafBinaryTest()
         {
             var tree = new SumOfRootToLeafBinary.TreeNode(1);
             tree.left = new SumOfRootToLeafBinary.TreeNode(0);
@@ -20,6 +24,7 @@ namespace LeetCodeChallenges
 
             var expected = 22;
             Console.WriteLine($"Sum of the binary tree is {result} expected: {expected}");
+            Assert.AreEqual(expected, result);
         }
     }
 }
