@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using LeetCodeChallenges.DataStructures;
+using NUnit.Framework;
+using LeetCodeChallenges;
 
-namespace LeetCodeChallenges
+namespace LeetCodeProblemsTests
 {
+    [TestFixture]
     public class WordSearchTests
     {
-        public static void TrieTest()
+        [Test]
+        public void TrieTest1()
         {
             var trie = new TrieNode();
             var words = new List<string> 
@@ -23,14 +27,12 @@ namespace LeetCodeChallenges
             var extractedWords = TrieNode.GetAllWords(trie);
             foreach (var word in words)
             {
-                if (!extractedWords.Contains(word))
-                {
-                    Console.WriteLine($"Word {word} wasn't extracted from trie");
-                }
+                Assert.IsTrue(extractedWords.Contains(word), $"Word {word} wasn't extracted from trie");
             }
         }
 
-        public static void Test()
+        [Test]
+        public void WordSearchTest2()
         {
             var board = new char[][] {
                 new char[] {'o','a','a','n'},
@@ -43,6 +45,14 @@ namespace LeetCodeChallenges
 
             var search = new WordSearch();
             var foundWords = search.FindWords(board, words);
+            foreach (var item in foundWords)
+            {
+                Console.WriteLine(item);
+            }
+
+            Assert.AreEqual(2, foundWords.Count);
+            Assert.AreEqual("oath", foundWords[0]);
+            Assert.AreEqual("eat", foundWords[1]);
         }
     }
 }

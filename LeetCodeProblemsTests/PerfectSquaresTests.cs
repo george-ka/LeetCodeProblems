@@ -1,11 +1,14 @@
 using System;
-using System.Diagnostics;
+using NUnit.Framework;
+using LeetCodeChallenges;
 
-namespace LeetCodeChallenges
+namespace LeetCodeProblemsTests
 {
+    [TestFixture]
     public class PerfectSquaresTests
     {
-        public static void TrivialSamplesShouldWork()
+        [Test]
+        public void TrivialSamplesShouldWork()
         {
             AssertItWorksAsExpected(1, 1);
             AssertItWorksAsExpected(2, 2);
@@ -23,21 +26,14 @@ namespace LeetCodeChallenges
             AssertItWorksAsExpected(14, 3);
             AssertItWorksAsExpected(15, 4);
             AssertItWorksAsExpected(195, 3);
-          //  AssertItWorksAsExpected(9999, 4);
+            AssertItWorksAsExpected(9999, 4);
         }
 
         private static void AssertItWorksAsExpected(int target, int expectedResult)
         {
             var solution = new PerfectSquaresSolution();
             var result = solution.FindMinimalNumberOfSqaresWhichSumUpTo(target);
-            if (result == expectedResult)
-            {
-                Console.WriteLine($"Works as expected for {target}, result = {result}");
-            }
-            else
-            {
-                Console.WriteLine($"Unexpected result for {target}, result = {result} expected: {expectedResult}");
-            }
+            Assert.AreEqual(expectedResult, result, $"Failed for target {target}");
         }
     }
 }

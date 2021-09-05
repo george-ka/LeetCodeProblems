@@ -8,15 +8,6 @@ namespace LeetCodeChallenges
     {
         static void Main(string[] args)
         {
-            // LeetCodeChallenges.RemoveDuplicates.RemoveDuplicatesTest();
-            // LeetCodeChallenges.QueensAttackingTheKingTests.RunTests();
-            // LeetCodeChallenges.ThreeSumClosestTests.RunTests();
-            // LeetCodeChallenges.IntegerToRomanTests.RunTests();
-            // LeetCodeChallenges.WordSearchTests.Test();
-            // LeetCodeChallenges.SumOfTheRootToLeafBinaryTests.Test();
-            // LeetCodeChallenges.BinaryTreeInorderTraversalTests.Test();
-            // LeetCodeChallenges.PerfectSquaresTests.TrivialSamplesShouldWork();
-
             var soluton = new KLargestArrayElements();
             //Func<int[]> assign = () => { return new int[] {13, 4, 1, 5, 6, 77, 9, 9, 12, 19, 53, 0}; };
             //Func<int[]> assign = () => { return new int[] {3,2,3,1,2,4,5,5,6}; };

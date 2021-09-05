@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
+using LeetCodeChallenges;
 
-namespace LeetCodeChallenges
+namespace LeetCodeProblemsTests
 {
+    [TestFixture]
     public class BinaryTreeInorderTraversalTests
     {
-        public static void Test()
+        [Test]
+        public void Test()
         {
             var tree = new BinaryTreeInorderTraversal.TreeNode(1);
             tree.right = new BinaryTreeInorderTraversal.TreeNode(2);
@@ -17,14 +21,13 @@ namespace LeetCodeChallenges
             var traversal = new BinaryTreeInorderTraversal();
             var result = traversal.InorderTraversal(tree);
 
+            var stringBuilder = new System.Text.StringBuilder();
             foreach (var i in result)
             {
-                Console.Write(i);
-                Console.Write(", ");
+                stringBuilder.Append($"{i}, ");
             }
 
-            Console.WriteLine();
-            Console.WriteLine("Expected 1, 3, 2, 5, 4, 6");
+            Assert.AreEqual("1, 3, 2, 5, 4, 6, ", stringBuilder.ToString());
         }
     }
 }
