@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LeetCodeChallenges
 {
@@ -23,7 +24,7 @@ namespace LeetCodeChallenges
     ///     -10 /
     ///     (buy@3)  
     ///      we can't sell it with profit, so discard this branch (return that maximum profit is 0)
-    ///      we should momoize it too
+    ///      we should memoize it too
     ///            -3 |  
     ///           (buy@4) - recursively go to the next possible index = 4
     ///           +10 |
@@ -49,7 +50,66 @@ namespace LeetCodeChallenges
     {
         public int MaxProfit(int[] prices) 
         {
-            return 0;
+            var memo = new Dictionary<int, int>();
+            return MaximizeProfit(prices, 0, memo);
+        }
+
+        private int MaximizeProfit(int[] prices, int startIndex, Dictionary<int, int> memo)
+        {
+            var maxProfitSoFar = 0;
+
+            for (var i = startIndex; i < prices.Length; i++)
+            {
+                var result = 0;
+                if (memo.ContainsKey(i))
+                {
+                    result = memo[i];
+                } 
+                else
+                {
+                    result = BuyAtAndMaximizeProfit(i, prices, memo);
+                    memo[i] = result;
+                }
+
+                if (result > maxProfitSoFar)
+                {
+                    maxProfitSoFar = result;
+                }
+            }
+
+            return maxProfitSoFar;
+        }
+
+        private int BuyAtAndMaximizeProfit(int indexWhereToBuy, int[] prices, Dictionary<int, int> memo)
+        {
+            var boughtFor = prices[indexWhereToBuy];
+            if (indexWhereToBuy + 1 >= prices.Length)
+            {
+                return 0;
+            }
+
+            // now let's try to find the best possible selling time and maximize from there
+            var localPriceMaximum = int.MinValue;
+            var maxProfit = 0;
+
+            for (var i = indexWhereToBuy + 1; i < prices.Length; i++)
+            {
+                if (prices[i] > boughtFor && prices[i] > localPriceMaximum)
+                {
+                    //if ()
+                    {
+                        localPriceMaximum = prices[i];
+                    }
+
+                    var maxProfitSoFar = prices[i] - boughtFor + (MaximizeProfit(prices, i + 2, memo));
+                    if (maxProfitSoFar > maxProfit)
+                    {
+                        maxProfit = maxProfitSoFar;
+                    }
+                }
+            }
+
+            return maxProfit;
         }
     }
 }
