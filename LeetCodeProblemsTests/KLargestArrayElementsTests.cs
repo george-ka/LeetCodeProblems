@@ -38,7 +38,7 @@ namespace LeetCodeProblemsTests
         }
 
         [Test]
-        private void TestFindKthLargest()
+        public void TestFindKthLargest()
         {
             RunFindKthLargestTest(() => { return new int[] {13, 4, 1, 5, 6, 77, 9, 9, 12, 19, 53, 0}; });
             RunFindKthLargestTest(() => { return new int[] {3,2,3,1,2,4,5,5,6}; });
@@ -51,26 +51,16 @@ namespace LeetCodeProblemsTests
         {
             var soluton = new KLargestArrayElements();
             var sorted = assign();
-            Array.Sort(sorted);
+            Array.Sort(sorted, new Comparison<int>((i, j) => j.CompareTo(i)));
             
             for (var k = 0; k < sorted.Length; k++)
             {
                 var nums = assign();
                 var result = soluton.QuickSelect(nums, k);
-                PrintArray(nums);
+                nums.PrintArray();
                 Console.WriteLine();
                 Assert.AreEqual(sorted[k], result, $"Expected {k}th biggest to be {sorted[k]} but it is {result} ");
             }
-        }
-
-        static void PrintArray(int[] nums)
-        {
-            for (var i = 0; i < nums.Length; i++)
-            {
-                Console.Write($"{nums[i]} ");
-            }
-            
-            Console.WriteLine();
         }
 
         private void RunSortThreeTest(int[] nums, int[] expected)

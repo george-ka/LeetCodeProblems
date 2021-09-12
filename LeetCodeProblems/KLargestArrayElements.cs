@@ -29,7 +29,7 @@ namespace LeetCodeChallenges
             var rightBoundary = nums.Length - 1;
             while (leftBoundary != rightBoundary)
             {
-                PrintArray(nums);
+                nums.PrintArray();
 
                 partitionIndex = Partition(nums, leftBoundary, rightBoundary);
                 Console.WriteLine($"leftBoundary: {leftBoundary}, rightBoundary: {rightBoundary}, partitionIndex: {partitionIndex}");
@@ -154,21 +154,11 @@ namespace LeetCodeChallenges
             }
         }
 
-        public void Swap(int[] nums, int i, int j)
+        public static void Swap<T>(T[] arr, int i, int j)
         {
-            var buffer = nums[i];
-            nums[i] = nums[j];
-            nums[j] = buffer;
-        }
-
-        static void PrintArray(int[] nums)
-        {
-            for (var i = 0; i < nums.Length; i++)
-            {
-                Console.Write($"{nums[i]} ");
-            }
-            
-            Console.WriteLine();
+            var buffer = arr[i];
+            arr[i] = arr[j];
+            arr[j] = buffer;
         }
     }
 }
