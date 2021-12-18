@@ -22,7 +22,7 @@ namespace LeetCodeChallenges
             Console.WriteLine($"Partition = {nums[partitionIndex]}, {partitionIndex}");
         }
 
-        public int FindMedian(int[] nums)
+        public int FindMean(int[] nums)
         {
             var total = 0d;
             for (var i = 0; i < nums.Length; i++)
@@ -37,7 +37,7 @@ namespace LeetCodeChallenges
         // different approach than in KthLargestElement
         public int Partition(int[] nums)
         {
-            var median = FindMedian(nums);
+            var median = FindMean(nums);
 
             var j = nums.Length - 1;
             var i = 0;
