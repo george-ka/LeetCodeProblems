@@ -12,7 +12,7 @@ namespace LeetCodeProblemsTests
         {
             var nums = new int[] { 21, 20, 21 };
             var sut = new WiggleSortSolution();
-            var median = sut.FindMedian(nums);
+            var median = sut.FindMean(nums);
 
             Assert.AreEqual(20, median);
         }
