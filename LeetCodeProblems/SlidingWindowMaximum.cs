@@ -26,7 +26,7 @@ namespace LeetCodeChallenges
             slidingWindowHeap.OnElementRearrange = 
                 (element, newIndex) =>
                 {
-                    Console.WriteLine($"Put {element.Value} on {newIndex}");
+                    // Console.WriteLine($"Put {element.Value} on {newIndex}");
                     element.HeapIndex = newIndex;
                 };
             
