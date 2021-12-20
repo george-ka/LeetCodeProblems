@@ -8,10 +8,32 @@ namespace LeetCodeChallenges
     /// 239. Sliding Window Maximum
     /// https://leetcode.com/problems/sliding-window-maximum/description/
     /// 
+    /// This solution with Max-heap is n * log(k)
+    /// is not optimal, because it uses a Heap which contains all k elements
+    /// Every iteration adds an element to heap and removes one
+    /// To quickly find an element in the heap we also use a Queue of
+    /// k elements and each element remembers it's index in the heap
+    /// So once we need to remove an element from Heap, we pop it from the
+    /// queue, get it's index and remove it from Heap, which takes log(k) time
+    /// We add new element to the Queue O(1) and to the Heap O(log(k))
+    ///
+    /// This is the first solution which I realized to be not optimal
+    /// when I checked for solutions :(
+    /// There is O(n) solution with a deque, which I couldn't find
     public class SlidingWindowMaximum
     {
         public int[] MaxSlidingWindow(int[] nums, int k) 
         {
+            if (nums == null)
+            {
+                throw new ArgumentNullException(nameof(nums));
+            }
+
+            if (nums.Length < k)
+            {
+                throw new ArgumentException($"Nums length should be greater than {k}");
+            }
+
             // |1|2|3|4|5|6|
             // |1|2|          1
             //   |_|_|        2
@@ -20,16 +42,22 @@ namespace LeetCodeChallenges
             //         |_|_|  5
             // num.Length - k + 1
             var result = new int[nums.Length - k + 1];
+            // Queue for the sliding window, we add and pop elements while we move right
             var slidingWindow = new Queue<SlidingWindowElement>();
+            // Max heap is to track order in the queue
+            // SlidingWindowElement remembers it's index in the max-heap
+            // so it can be easily found in the heap when it's time to remove it 
             var slidingWindowHeap = new MaxHeap<SlidingWindowElement>(k);
             
+            // This is a callback to update element's index in max-heap
+            // when it bubles up or down the heap
             slidingWindowHeap.OnElementRearrange = 
                 (element, newIndex) =>
                 {
-                    // Console.WriteLine($"Put {element.Value} on {newIndex}");
                     element.HeapIndex = newIndex;
                 };
             
+            // Fill in the queue and heap with first k elements
             for (var i = 0; i < k; i++)
             {
                 var element = new SlidingWindowElement(nums[i]);
