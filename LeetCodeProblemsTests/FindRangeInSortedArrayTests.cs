@@ -6,10 +6,10 @@ using LeetCodeChallenges;
 namespace LeetCodeProblemsTests
 {
     [TestFixture]
-    public class FindRangeInSortedArrayTests
+    public class SearchInRotatedSortedArrayTests
     {
         [Test]
-        public void FindRangeInSortedArrayTest1()
+        public void SearchInRotatedSortedArrayTest1()
         {
             var result = GetTestResult(GetTestArray(), 7);
             Assert.AreEqual(new int[] { 1, 2 }, result);
