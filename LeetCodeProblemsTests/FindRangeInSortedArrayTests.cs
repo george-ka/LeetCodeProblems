@@ -6,7 +6,7 @@ using LeetCodeChallenges;
 namespace LeetCodeProblemsTests
 {
     [TestFixture]
-    public class SearchInRotatedSortedArrayTests
+    public class FindRangeInSortedArrayTests
     {
         [Test]
         public void FindRangeInSortedArrayTest1()

@@ -103,23 +103,24 @@ namespace LeetCodeChallenges
                 }
                 else
                 {
-                    throw new Exception("Unexpected situation 2");
+                    return -1;
                 }
             }
 
+            Console.WriteLine($"Searching {target} between {leftBoundary} and {rightBoundary}");
             if (leftBoundary == rightBoundary)
             {
-                throw new Exception("Shouldn't be here too");
+                return CheckTwoValues(nums, target, leftBoundary, rightBoundary);
             }
 
             while (leftBoundary < rightBoundary)
             {
-                candidate = leftBoundary + (rightBoundary - leftBoundary) / 2;
                 if (leftBoundary + 1 == rightBoundary)
                 {
                     return CheckTwoValues(nums, target, leftBoundary, rightBoundary);
                 }
 
+                candidate = leftBoundary + (rightBoundary - leftBoundary) / 2;
                 if (nums[candidate] == target)
                 {
                     return candidate;
@@ -142,12 +143,12 @@ namespace LeetCodeChallenges
         {
             if (nums[left] == target)
             {
-                return 0;
+                return left;
             }
             
             if (nums[right] == target)
             {
-                return 1;
+                return right;
             }
 
             return -1;
