@@ -9,7 +9,7 @@ namespace LeetCodeProblemsTests
     public class SearchInRotatedSortedArrayTests
     {
         [Test]
-        public void SearchInRotatedSortedArrayTest1()
+        public void FindRangeInSortedArrayTest1()
         {
             var result = GetTestResult(GetTestArray(), 7);
             Assert.AreEqual(new int[] { 1, 2 }, result);
