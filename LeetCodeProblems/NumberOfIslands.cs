@@ -17,7 +17,7 @@ namespace LeetCodeChallenges
         public int NumIslands(char[][] grid)
         {
             char currentIsland = (char)0;
-            var listOfIslandsToMerge = new Dictionary<char, char>();
+            var listOfIslandsToMerge = new HashSet<string>();
 
             for (var i = 0; i < grid.Length; i++)
             {
@@ -31,7 +31,69 @@ namespace LeetCodeChallenges
             }
             
             Console.WriteLine($"current island {(int)currentIsland}, list of islands to merge {listOfIslandsToMerge.Count}");
-            return (int)currentIsland - listOfIslandsToMerge.Count;
+            foreach (var p in listOfIslandsToMerge)
+            {
+                Console.WriteLine($"merge {p}");
+            }
+
+            var islandsAdjacencyList = new Dictionary<int, HashSet<int>>();
+            for (var i = 1; i <= (int)currentIsland; i++ )
+            {
+                if (i == (int)'0' || i == (int)'1')
+                {
+                    continue;
+                }
+                
+                islandsAdjacencyList[i] = new HashSet<int>();        
+            }
+
+            foreach (var adjacency in listOfIslandsToMerge)
+            {
+                islandsAdjacencyList[(int)adjacency[0]].Add((int)adjacency[1]);
+                islandsAdjacencyList[(int)adjacency[1]].Add((int)adjacency[0]);
+            }
+            
+            return CountNumberOfIslands(islandsAdjacencyList);
+        }
+
+        private int CountNumberOfIslands(Dictionary<int, HashSet<int>> adjacencyList)
+        {
+            var visited = new Dictionary<int, bool>();
+            foreach (var key in adjacencyList.Keys)
+            {
+                visited[key] = false;
+            }
+
+            var numberOfIslands = 0;
+            foreach (var key in adjacencyList.Keys)
+            {
+                if (visited[key])
+                {
+                    continue;
+                }
+
+                numberOfIslands++;
+                var visitQueue = new Queue<int>();
+                visitQueue.Enqueue(key);
+
+                while (visitQueue.Count > 0)
+                {
+                    var visitKey = visitQueue.Dequeue();
+                    if (visited[visitKey])
+                    {
+                        continue;
+                    }
+
+                    visited[visitKey] = true;
+                    foreach (var toVisit in adjacencyList[visitKey])
+                    {
+                        visitQueue.Enqueue(toVisit);
+                    }
+                }
+            }
+
+            
+            return numberOfIslands;
         }
 
         private char MarkAdjacent(
@@ -39,7 +101,7 @@ namespace LeetCodeChallenges
             int i,
             int j,
             char currentIsland, 
-            Dictionary<char, char> listOfIslandsToMerge)
+            HashSet<string> listOfIslandsToMerge)
         {
             var newCurrentIsland = currentIsland;
             var adjacentIslands = new List<char>();
@@ -90,23 +152,16 @@ namespace LeetCodeChallenges
                         continue;
                     }
                     
-                    if (islandName < islandToMerge)
-                    {
-                        listOfIslandsToMerge[islandName] = islandToMerge;
-                    }
-                    else
-                    {
-                        listOfIslandsToMerge[islandToMerge] = islandName;
-                    }
+                    listOfIslandsToMerge.Add(new string(new [] { islandName, islandToMerge }));
                 }
             }
 
-            MarkedIsland(grid, i, j, islandName);
+            MarkIsland(grid, i, j, islandName);
 
             return newCurrentIsland;
         }
 
-        private void MarkedIsland(char[][] grid, int i, int j, char islandName)
+        private void MarkIsland(char[][] grid, int i, int j, char islandName)
         {
             if (!IsValidCordinates(grid, i, j))
             {
