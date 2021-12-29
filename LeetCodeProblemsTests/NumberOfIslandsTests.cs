@@ -22,6 +22,34 @@ namespace LeetCodeProblemsTests
             Assert.AreEqual(3, result);
         }
 
+        public void NumberOfIslandsTest2()
+        {
+            var grid = new char[][] 
+            {
+                new char[] { '1','1','1','1','0' },
+                new char[] { '1','1','0','1','0' },
+                new char[] { '1','1','0','0','0' },
+                new char[] { '0','0','0','0','0' }
+            };
+
+            var result = CountIslands(grid);
+            Assert.AreEqual(1, result);
+        }
+
+        public void NumberOfIslandsTest3()
+        {
+            var grid = new char[][] 
+            {
+                new char[] { '1','0','1','0','1' },
+                new char[] { '1','0','1','0','1' },
+                new char[] { '1','1','1','1','1' },
+                new char[] { '0','0','0','0','1' }
+            };
+
+            var result = CountIslands(grid);
+            Assert.AreEqual(1, result);
+        }
+
         private static int CountIslands(char[][] grid)
         {
             var sut = new NumberOfIslands();
