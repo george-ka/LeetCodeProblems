@@ -79,7 +79,7 @@ namespace LeetCodeProblemsTests
 
         private static int CountIslands(char[][] grid)
         {
-            var sut = new NumberOfIslands();
+            var sut = new NumberOfIslands2();
             return sut.NumIslands(grid);
         }
 

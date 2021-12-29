@@ -25,6 +25,10 @@ namespace LeetCodeChallenges
                 {
                     if (grid[i][j] != '0')
                     {
+                        // mark all adjacent cells with island name
+                        // we'll use the same matrix, but skip '0' and '1' 
+                        // values
+                        // char is UTF-16, so we have enough values  
                         currentIsland = MarkAdjacent(grid, i, j, currentIsland, listOfIslandsToMerge);
                     }
                 }
@@ -92,7 +96,6 @@ namespace LeetCodeChallenges
                 }
             }
 
-            
             return numberOfIslands;
         }
 
