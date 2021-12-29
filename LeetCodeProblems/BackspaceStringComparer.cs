@@ -16,33 +16,7 @@ namespace LeetCodeChallenges
     {
         public bool BackspaceCompare(string s, string t) 
         {
-            var i = 0;
-            var j = 0;
-            var curS = 'a';
-            var curT = 'a';
-
-            while (i < s.Length && j < t.Length)
-            {
-                // ##1##
-                // 123
-                // 123######
-                var curI = i;
-                while (s[i] == '#')
-                {
-                    curI--;
-                    i++;
-                }
-
-                if (curS != curT)
-                {
-                    return false;
-                }
-
-                i++;
-                j++;
-            }
-
-            return true;
+            return BuildString(s) == BuildString(t);
         }
 
         private string BuildString(string s)
@@ -50,7 +24,17 @@ namespace LeetCodeChallenges
             var stringBuilder = new StringBuilder();
             for (var i = 0; i < s.Length; i++)
             {
-
+                if (s[i] == '#')
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Length --;
+                    }
+                }
+                else
+                {
+                    stringBuilder.Append(s[i]);
+                }
             }
 
             return stringBuilder.ToString();
