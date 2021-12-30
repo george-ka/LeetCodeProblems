@@ -4,6 +4,9 @@ using System.Collections.Generic;
 namespace LeetCodeChallenges
 {
     ///
+    /// 116. Populating Next Right Pointers in Each Node
+    /// https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+    ///
     /// 117. Populating Next Right Pointers in Each Node II
     /// https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
     /// 
@@ -16,20 +19,9 @@ namespace LeetCodeChallenges
     {
         public Node Connect(Node root) 
         {
-            PopulateRight(root, null, null);
-            return root;
-        }
-
-        private void PopulateRight(
-            Node node,
-            Node rightSibling, 
-            Node parentsNext)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
+            Node node = null;
+            Node rightSibling = null;
+            Node parentsNext = null;
             var stack = new Stack<Tuple<Node, Node, Node>>();
             stack.Push(new Tuple<Node, Node, Node>(node, null, null));
             while (stack.Count > 0)
@@ -71,6 +63,8 @@ namespace LeetCodeChallenges
                 // first go right child 
                 stack.Push(new Tuple<Node, Node, Node>(node.right, null, node.next));
             }
+
+            return root;
         }
 
         public class Node 
