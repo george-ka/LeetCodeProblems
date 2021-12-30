@@ -30,32 +30,47 @@ namespace LeetCodeChallenges
                 return;
             }
 
-            if (rightSibling != null)
+            var stack = new Stack<Tuple<Node, Node, Node>>();
+            stack.Push(new Tuple<Node, Node, Node>(node, null, null));
+            while (stack.Count > 0)
             {
-                node.next = rightSibling;
-            }
-            else if (parentsNext != null)
-            {
-                var next = parentsNext;
-                while (next != null && node.next == null)
+                var topStack = stack.Pop();
+                node = topStack.Item1;
+                rightSibling = topStack.Item2;
+                parentsNext = topStack.Item3;
+
+                if (node == null)
                 {
-                    if (next.left != null)
-                    {
-                        node.next = next.left;
-                    }
-                    else if (next.right != null)
-                    {
-                        node.next = next.right;
-                    }
-
-                    next = next.next;
+                    continue;
                 }
-            }
 
-            // first go right child 
-            PopulateRight(node.right, null, node.next);
-            // then left
-            PopulateRight(node.left, node.right, node.next);
+                if (rightSibling != null)
+                {
+                    node.next = rightSibling;
+                }
+                else if (parentsNext != null)
+                {
+                    var next = parentsNext;
+                    while (next != null && node.next == null)
+                    {
+                        if (next.left != null)
+                        {
+                            node.next = next.left;
+                        }
+                        else if (next.right != null)
+                        {
+                            node.next = next.right;
+                        }
+
+                        next = next.next;
+                    }
+                }
+
+                // then left
+                stack.Push(new Tuple<Node, Node, Node>(node.left, node.right, node.next));
+                // first go right child 
+                stack.Push(new Tuple<Node, Node, Node>(node.right, null, node.next));
+            }
         }
 
         public class Node 
