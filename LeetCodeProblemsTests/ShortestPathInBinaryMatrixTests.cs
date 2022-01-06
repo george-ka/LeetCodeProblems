@@ -106,13 +106,14 @@ namespace LeetCodeProblemsTests
         {
             var grid = new int[][] 
             {
-                new int[] { 0,0,1,0,0,0,0 },
-                new int[] { 0,1,0,0,0,0,1 },
-                new int[] { 0,0,1,0,1,0,0 },
-                new int[] { 0,0,0,1,1,1,0 },
-                new int[] { 1,0,0,1,1,0,0 },
-                new int[] { 1,1,1,1,1,0,1 },
-                new int[] { 0,0,1,0,0,0,0 }
+                //          0 1 2 3 4 5 6
+                new int[] { 0,0,1,0,0,0,0 }, // 0
+                new int[] { 0,1,0,0,0,0,1 }, // 1
+                new int[] { 0,0,1,0,1,0,0 }, // 2
+                new int[] { 0,0,0,1,1,1,0 }, // 3
+                new int[] { 1,0,0,1,1,0,0 }, // 4
+                new int[] { 1,1,1,1,1,0,1 }, // 5
+                new int[] { 0,0,1,0,0,0,0 }  // 6
             };
 
             var result = FindShortestPath(grid);
@@ -146,6 +147,19 @@ namespace LeetCodeProblemsTests
         } 
 
         [Test]
+        public void ShortestPathInBinaryMatrixTrivialTest()
+        {
+            var grid = new int[][] 
+            {
+                new int[] { 0,0 }, // 0
+                new int[] { 0,0 }
+            };
+
+            var result = FindShortestPath(grid);
+            Assert.AreEqual(2, result);
+        } 
+
+        [Test]
         public void ShortestPathInBinaryMatrixTestNegative1()
         {
             var grid = new int[][] 
@@ -160,6 +174,26 @@ namespace LeetCodeProblemsTests
             var result = FindShortestPath(grid);
             Assert.AreEqual(-1, result);
         }
+
+        [Test]
+        public void ShortestPathInBinaryMatrixTest8()
+        {
+            var grid = new int[][] 
+            {
+                new int[] { 0,0,0,0,0,0,0,0 }, // 0
+                new int[] { 0,0,1,0,0,0,0,1 }, // 1
+                new int[] { 1,0,0,0,0,0,0,0 }, // 2
+                new int[] { 0,0,0,0,0,1,1,0 }, // 3
+                new int[] { 0,0,1,0,1,0,1,1 }, // 4
+                new int[] { 0,0,0,0,0,0,0,0 }, // 5
+                new int[] { 0,0,0,1,1,1,0,0 }, // 6
+                new int[] { 1,0,1,1,1,0,0,0 }, // 7
+                //          0 1 2 3 4 5 6 7 
+            };
+
+            var result = FindShortestPath(grid);
+            Assert.AreEqual(9, result);
+        } 
 
         private int FindShortestPath(int[][] grid)
         {

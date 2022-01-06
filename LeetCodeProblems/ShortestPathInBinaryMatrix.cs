@@ -1,6 +1,8 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LeetCodeChallenges
 {
@@ -29,163 +31,68 @@ namespace LeetCodeChallenges
                 return -1;
             }
 
-            var nodesList = new List<int[]>();
-            var memo = new Dictionary<string, Tuple<int, int[][]>>();
-            var result = GoNext(grid, 0, 0, nodesList, memo);
-            
-            if (result.Item1 == -1)
-            {
-                return -1;
-            }
+            var priorityQueue = new MinHeap<CoordinatesWithDistance>(grid.Length * grid.Length);
+            var previousCoords = new Dictionary<Coordinates, Coordinates>();
+            var pathLength = new Dictionary<Coordinates, int>();
 
-            return result.Item1; 
-        }
+            var seed = new CoordinatesWithDistance(new int[2], 0);
+            priorityQueue.Add(seed);
+            previousCoords[seed.Coords] = null;
+            pathLength[seed.Coords] = 1;
+            var target = new Coordinates(grid.Length - 1, grid.Length - 1);
+            var maximumHeuristicDistance = 0;
+            var targetFound = false;
 
-        private bool IsReachable(int[] cord1, int[] cord2)
-        {
-            foreach (var d in Directions)
+            while (!priorityQueue.IsEmpty)
             {
-                if (cord1[0] + d[0] == cord2[0]
-                && cord1[1] + d[1] == cord2[1])
+                var current = priorityQueue.Pop();
+                Console.WriteLine($"Current {current}");
+
+                if (targetFound && current.Distance > maximumHeuristicDistance)
                 {
-                    return true;
+                    Console.WriteLine($"Skip {current} as distance is greater than {maximumHeuristicDistance}");
+                    continue;
                 }
-            }
 
-            return false;
-        }
-
-        private Tuple<int, int[][]> GoNext(int[][] grid, int i, int j, IList<int[]> nodesList, Dictionary<string, Tuple<int, int[][]>> memo, int depth = 0)
-        {
-            var resultPath = nodesList.ToList();
-            resultPath.Add(new int[] { i, j });
-
-            // Destination reached
-            if (i == grid.Length - 1 && j == grid.Length - 1)
-            {                
-                return new Tuple<int, int[][]>(1, resultPath.ToArray());
-            }
-
-            if (IsClearToDownRight(grid, i, j) 
-                && memo.ContainsKey($"{i},{j}"))
-            {
-                return memo[$"{i},{j}"];
-            }
-
-            // mark visited
-            grid[i][j] = 2;
-            var nodesListCount = nodesList.Count;
-
-            // Given that the target is known to be the bottom right cell
-            // in the order of directions should be based on that direction
-            // (bottom right) 
-            // We should reorder directions based on the distance to the target and their own weight
-            var directionsWithDistance = Directions
-                .Where(d => CanMakeNextMove(grid, i, j, d))
-                .Select(d => new DirectionWithDistance(d, DistanceToTarget(grid, i, j, d)))
-                .OrderBy(dd => dd.Distance)
-                .ToArray();
-
-            int? resultingMinimum = null;
-            int[][] minModesList = null;
-            var tabulation = new string(' ', depth);
-            Console.WriteLine($"{tabulation}On ({i}, {j}). Directions: " + string.Join(',', directionsWithDistance.Select(x => $"({x.Direction[0]}, {x.Direction[1]}, {x.Distance})")));
-            Console.WriteLine($"{tabulation}On ({i}, {j}). Visited nodes: " + string.Join(',', nodesList.Select(x => $"({x[0]}, {x[1]})")));
-            if (i == 1 && j == 0)
-            {
-                Console.WriteLine($"(2,0) is {grid[2][0]}");
-            }
-            
-            foreach (var dd in directionsWithDistance)
-            {
-                var d = dd.Direction;
-                Console.WriteLine($"{tabulation}On ({i}, {j}). Trying direction ({d[0]}, {d[1]})");
-                var subresult = GoNext(grid, i + d[0], j + d[1], nodesList, memo, depth + 1);
-                Console.WriteLine($"{tabulation}On ({i}, {j}). subresult {subresult} for {i+d[0]}, {j + d[1]}");
-               
-                if (subresult.Item1 >= 0)
+                var directionsWithDistance = Directions
+                    .Where(d => CanMakeNextMove(grid, current.Coords.X, current.Coords.Y, d))
+                    .Select(d => current.Coords + new Coordinates(d))
+                    .Where(c => !previousCoords.ContainsKey(c) || pathLength[current.Coords] + 1 < pathLength[c])
+                    .Select(c => new CoordinatesWithDistance(c, pathLength[current.Coords] + 1 + c.Distance(target)))
+                    .ToArray();
+                
+                foreach (var newCord in directionsWithDistance)
                 {
-                    nodesList.Add(new [] { i + d[0], j + d[1]});
-                    if ((resultingMinimum.HasValue && subresult.Item1 + 1 < resultingMinimum.Value)
-                        || !resultingMinimum.HasValue)
+                    Console.WriteLine($"New cord {newCord}");
+                    priorityQueue.Add(newCord);
+                    previousCoords[newCord.Coords] = current.Coords;
+                    pathLength[newCord.Coords] = pathLength[current.Coords] + 1;
+
+                    if (newCord.Coords.Equals(target))
                     {
-                        resultingMinimum = subresult.Item1 + 1;
-                        minModesList = subresult.Item2;
-                    }
-                }
+                        var curCords = newCord.Coords;
+                        Console.WriteLine($"Path to {curCords}");
+                        while (previousCoords[curCords] != null)
+                        {
+                            Console.WriteLine(previousCoords[curCords]);
+                            curCords = previousCoords[curCords];
+                        }
 
-                // revert steps for the next iteration
-                for (var s = nodesList.Count - 1; s >= nodesListCount; s--)
-                {
-                    grid[nodesList[s][0]][nodesList[s][1]] = 0;
-                    nodesList.RemoveAt(s);
-                }
-            }
-
-            if (minModesList != null)
-            {
-                resultPath.Clear();
-                for (var n = 0; n < minModesList.Length; n++)
-                    resultPath.Add(minModesList[n]);
-
-                OptimizePath(resultPath);
-            }
-            
-            grid[i][j] = 0;
-            var result = new Tuple<int, int[][]>(
-                resultingMinimum.HasValue ? resultingMinimum.Value : -1, 
-                resultPath.ToArray());
-            
-            if (IsClearToDownRight(grid, i, j))
-            {
-                memo[$"{i},{j}"] = result;
-            }
-
-            return result;
-        }
-
-        private void OptimizePath(List<int[]> nodesList)
-        {
-            Console.WriteLine("Path ");
-            var path = nodesList.ToArray();
-            for (var i = 0; i < path.Length; i++)
-            {
-                Console.WriteLine($"{path[i][0]},{path[i][1]}");
-
-                if (i - 1 >= 0
-                    && i + 1 < path.Length 
-                    && IsReachable(path[i + 1], path[i - 1]))
-                {
-                    Console.WriteLine("DELETE!");
-                    nodesList.RemoveAt(i);
-                }
-            }   
-        }
-
-        private bool IsClearToDownRight(int[][] grid, int i, int j)
-        {
-            for (var i1 = i; i1 < grid.Length; i1++)
-            {
-                for (var j1 = j; j1 < grid[i1].Length; j1++)
-                {
-                    if (grid[i1][j1] > 1)
-                    {
-                        return false;
+                        targetFound = true;
+                        // trying other options within current max + 1 to improve our result
+                        maximumHeuristicDistance = pathLength[newCord.Coords] + 1;
+                        Console.WriteLine($"Target found. Current best distance is {pathLength[newCord.Coords]}. Exploring other options with distance within {maximumHeuristicDistance}");
                     }
                 }
             }
 
-            return true;
+            if (targetFound)
+            {
+                return pathLength[target];
+            }
+            
+            return -1; 
         }
-
-        private double DistanceToTarget(int[][] grid, int i, int j, int[] nextMoveDirection)
-        {
-            var targetI = grid.Length - 1;
-            var targetJ = grid[targetI].Length - 1;
-
-            return Math.Sqrt(Math.Pow(targetI - i - nextMoveDirection[0], 2) + Math.Pow(targetJ - j - nextMoveDirection[1], 2));
-        }
-
         private bool CanMakeNextMove(int[][] grid, int i, int j, int[] nextMoveDirection)
         {
             return IsValidCordinates(grid, i + nextMoveDirection[0], j + nextMoveDirection[1])
@@ -213,17 +120,319 @@ namespace LeetCodeChallenges
             new [] { -1, -1 }
         };
 
-        private class DirectionWithDistance
+        public class Coordinates : IEquatable<Coordinates>
         {
-            public DirectionWithDistance(int[] direction, double distance)
+            public Coordinates(int[] cords)
             {
-                Direction = direction;
+                if (cords == null)
+                {
+                    throw new ArgumentNullException(nameof(cords));
+                }
+
+                if (cords.Length < 2)
+                {
+                    throw new ArgumentException("Cords length must be 2 or greater", nameof(cords));
+                }
+
+                InnerArray = cords;
+                X = cords[0];
+                Y = cords[1];
+            }
+
+            public Coordinates(int x, int y)
+                : this(new [] { x, y })
+            {
+            }
+
+            public int X { get; private set; }
+            public int Y { get; private set; }
+
+            public int[] InnerArray { get; private set;}
+
+            public static Coordinates operator +(Coordinates a, Coordinates b) 
+                => new Coordinates(a.X + b.X, a.Y + b.Y);
+
+            public double Distance(Coordinates target)
+            {
+                if (target == null)
+                {
+                    throw new ArgumentNullException(nameof(target));
+                }
+
+                return Math.Sqrt(Math.Pow(target.X - X, 2) + Math.Pow(target.Y - Y, 2));
+            }
+
+            public bool Equals([AllowNull] Coordinates other)
+            {
+                return X == other.X && Y == other.Y;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                
+                return Equals((Coordinates)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                int hash = 17;
+                unchecked // Overflow is fine, just wrap
+                {
+                    hash = hash * 23 + X.GetHashCode();
+                    hash = hash * 23 + Y.GetHashCode();
+                }
+
+                return hash;
+            }
+
+            public override string ToString()
+            {
+                return $"({X}, {Y})";
+            }
+        }
+
+        public class CoordinatesWithDistance : IComparable<CoordinatesWithDistance>
+        {
+            public CoordinatesWithDistance(Coordinates coordinates, double distance)
+            {
+                Coords = coordinates;
                 Distance = distance;
             }
 
-            public int[] Direction { get; set; }
+            public CoordinatesWithDistance(int[] coordinates, double distance)
+                : this(new Coordinates(coordinates), distance)
+            {
+            }
+
+            public Coordinates Coords { get; set; }
 
             public double Distance { get; set; }
+
+            public int CompareTo(CoordinatesWithDistance another)
+            {
+                return Distance.CompareTo(another.Distance);
+            }
+
+            public override string ToString()
+            {
+                return Coords.ToString() + " " + Distance;
+            }
+        }
+
+        public class MinHeap<T> where T : IComparable<T>
+        {
+            public MinHeap(int size)
+            {
+                _backHeap = new T[size + 1];
+                _lastIndex = 1;
+            }
+
+            public Action<T, int> OnElementRearrange = (e, i) => { };
+
+            public void Add(T element)
+            {
+                if (element == null)
+                {
+                    throw new ArgumentNullException(nameof(element));
+                }
+
+                if (_lastIndex >= _backHeap.Length)
+                {
+                    throw new HeapOverflowException();
+                }
+
+                _backHeap[_lastIndex] = element;
+                OnElementRearrange(element, _lastIndex);
+                BubleUp(_lastIndex);
+                _lastIndex++;
+            }
+
+            public bool IsEmpty
+            {
+                get => _lastIndex == 1;
+            }
+
+            public T Pop()
+            {
+                if (IsEmpty)
+                {
+                    return default(T);
+                }
+
+                var result = GetMin();
+                DeleteAt(1);
+                return result;
+            }
+
+            public T GetMin()
+            {
+                return _backHeap[1];
+            }
+
+            public void DeleteAt(int index)
+            {
+                if (index >= _lastIndex)
+                {
+                    throw new ArgumentException("Index exceeds current right bound. There are no elements.");
+                }
+
+                if (index == _lastIndex - 1)
+                {
+                    _backHeap[index] = default(T);
+                    _lastIndex -= 1;
+                    return;
+                }
+
+                Swap(index, _lastIndex - 1);
+                DeleteAt(_lastIndex - 1);
+                BubleUp(index); // just in case it can be bubled up
+                BubleDown(index);
+            }
+
+            public override string ToString()
+            {
+                var stringBuilder = new StringBuilder();
+                for (var i = 1; i < _lastIndex; i++)
+                {
+                    stringBuilder.AppendFormat("{0}, ", _backHeap[i]);
+                }
+                
+                return stringBuilder.ToString();
+            }
+
+            public string ToTreeString()
+            {
+                var currentLevel = new Queue<int>();
+                Queue<int> nextLevel = null;
+                var stringBuilder = new StringBuilder();
+
+                currentLevel.Enqueue(1);
+                
+                do 
+                {
+                    nextLevel = new Queue<int>();
+                    while (currentLevel.Count > 0)
+                    {
+                        var value = currentLevel.Dequeue();
+                        stringBuilder.AppendFormat("{0}, ", _backHeap[value]);
+
+                        var leftChildIndex = GetLeftChildIndex(value);
+                        if (leftChildIndex < _lastIndex)
+                        {
+                            nextLevel.Enqueue(leftChildIndex);
+                        }
+
+                        var rightChildIndex = GetRightChildIndex(value);
+                        if (rightChildIndex < _lastIndex)
+                        {
+                            nextLevel.Enqueue(rightChildIndex);
+                        }
+                    }
+
+                    currentLevel = nextLevel;
+                    stringBuilder.Append(Environment.NewLine);
+                }
+                while (nextLevel.Count > 0);
+                return stringBuilder.ToString();
+            } 
+
+            private void BubleDown(int index)
+            {
+                var leftChildIndex = GetLeftChildIndex(index);
+                var rightChildIndex = GetRightChildIndex(index);
+                
+                var indexToSwap = 0;
+
+                if (leftChildIndex >= _lastIndex)
+                {
+                    return;
+                }
+
+                if (rightChildIndex >= _lastIndex)
+                {
+                    indexToSwap = leftChildIndex;
+                }
+                else
+                {
+                    if (_backHeap[leftChildIndex].CompareTo(_backHeap[rightChildIndex]) < 0)
+                    {
+                        indexToSwap = leftChildIndex;
+                    }
+                    else
+                    {
+                        indexToSwap = rightChildIndex;
+                    }
+                }
+                
+                if (_backHeap[index].CompareTo(_backHeap[indexToSwap]) > 0)
+                {
+                    Swap(index, indexToSwap);
+                    BubleDown(indexToSwap);
+                }
+            }
+
+            private void BubleUp(int index)
+            {
+                if (index == 1)
+                {
+                    return;
+                }
+
+                if (_backHeap[index].CompareTo(_backHeap[GetParentIndex(index)]) < 0)
+                {
+                    Swap(index, GetParentIndex(index));
+                    BubleUp(GetParentIndex(index));
+                }
+            }
+
+            private int GetParentIndex(int index)
+            {
+                return index / 2;
+            }
+
+            private int GetLeftChildIndex(int index)
+            {
+                return index * 2;
+            }
+
+            private int GetRightChildIndex(int index)
+            {
+                return (index * 2) + 1;
+            }
+
+            private void Swap(int index1, int index2)
+            {
+                var buffer = _backHeap[index1];
+                _backHeap[index1] = _backHeap[index2];
+                _backHeap[index2] = buffer;
+                OnElementRearrange(_backHeap[index1], index1);
+                OnElementRearrange(_backHeap[index2], index2);
+            }
+
+            private int _lastIndex; 
+            private T[] _backHeap;
+        }
+
+        [Serializable]
+        public class HeapOverflowException : Exception 
+        {
+            public HeapOverflowException()
+            {
+            } 
+            
+            public HeapOverflowException(string message)
+                : base(message)
+            {
+            } 
+
+            public HeapOverflowException(string message, Exception innerException)
+                : base(message, innerException)
+            {
+            }
         }
     }
 }
