@@ -162,7 +162,7 @@ namespace LeetCodeChallenges
                 return Math.Sqrt(Math.Pow(target.X - X, 2) + Math.Pow(target.Y - Y, 2));
             }
 
-            public bool Equals([AllowNull] Coordinates other)
+            public bool Equals(Coordinates other)
             {
                 return X == other.X && Y == other.Y;
             }

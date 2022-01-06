@@ -160,6 +160,18 @@ namespace LeetCodeProblemsTests
         } 
 
         [Test]
+        public void ShortestPathInBinaryMatrixTrivialTest2()
+        {
+            var grid = new int[][] 
+            {
+                new int[] { 0 },
+            };
+
+            var result = FindShortestPath(grid);
+            Assert.AreEqual(1, result);
+        } 
+
+        [Test]
         public void ShortestPathInBinaryMatrixTestNegative1()
         {
             var grid = new int[][] 
