@@ -86,8 +86,9 @@ namespace LeetCodeChallenges
                         targetFound = true;
                         // trying other options within current max + 1 to improve our result
                         // 0.3 = 30% of allowance seem to be quite big, but only this worked with the biggest tests from leet code :(
-                        maximumHeuristicDistance = pathLength[newCord.Coords] + (0.3 * pathLength[newCord.Coords]);
+                        // maximumHeuristicDistance = pathLength[newCord.Coords] + (0.00 * pathLength[newCord.Coords]);
                         Console.WriteLine($"Target found. Current best distance is {pathLength[newCord.Coords]}. Exploring other options with distance within {maximumHeuristicDistance}");
+                        break;
                     }
                 }
             }
@@ -99,6 +100,7 @@ namespace LeetCodeChallenges
             
             return -1; 
         }
+
         private bool CanMakeNextMove(int[][] grid, int i, int j, int[] nextMoveDirection)
         {
             return IsValidCordinates(grid, i + nextMoveDirection[0], j + nextMoveDirection[1])
@@ -165,7 +167,8 @@ namespace LeetCodeChallenges
                     throw new ArgumentNullException(nameof(target));
                 }
 
-                return Math.Sqrt(Math.Pow(target.X - X, 2) + Math.Pow(target.Y - Y, 2));
+                return Math.Max(Math.Abs(target.X - X), Math.Abs(target.Y - Y));
+                // return Math.Sqrt(Math.Pow(target.X - X, 2) + Math.Pow(target.Y - Y, 2));
             }
 
             public bool Equals(Coordinates other)
