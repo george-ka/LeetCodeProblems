@@ -12,8 +12,7 @@ namespace LeetCodeChallenges
     /// The solution set must not contain duplicate subsets. Return the solution in any order.
     public class AllSubsets
     {
-        // Starting from the 1st element add one by one next elements
-        // or we can remove elements from the set. Starting from the 
+        // we can remove elements from the set. Starting from the 
         // full set and ending with the empty
         public IList<IList<int>> Subsets(int[] nums)
         {
