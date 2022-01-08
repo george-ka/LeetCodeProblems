@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LeetCodeChallenges
 {
@@ -13,9 +14,14 @@ namespace LeetCodeChallenges
 
         public static void PrintArray(this int[] nums)
         {
-            for (var i = 0; i < nums.Length; i++)
+            PrintList<int>(nums);
+        }
+
+        public static void PrintList<T>(this IList<T> list)
+        {
+            for (var i = 0; i < list.Count; i++)
             {
-                Console.Write($"{nums[i]} ");
+                Console.Write($"{list[i]} ");
             }
             
             Console.WriteLine();
