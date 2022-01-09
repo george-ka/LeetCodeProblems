@@ -15,6 +15,12 @@ namespace LeetCodeChallenges
     {
         // Heap's algorithm
         // https://en.wikipedia.org/wiki/Heap%27s_algorithm
+
+        // TODO: try another aproach.
+        // starting from 2, premutate (2 mutations)
+        // add one by one to this premutations (2)*3*4*5 ... *n 
+        // by placing next number into all possible positions
+        // it should be easier to see that some placement repeats previous one
         public IList<IList<int>> PermuteUnique(int[] nums)
         {
             var set = new HashSet<string>();
@@ -42,7 +48,7 @@ namespace LeetCodeChallenges
                     result.Add(nums.ToArray());
                     set.Add(numsString);
                 }
-                
+
                 return result;
             }
 
@@ -68,14 +74,7 @@ namespace LeetCodeChallenges
 
         private static string Stringify(int[] nums)
         {
-            var stringBuilder = new System.Text.StringBuilder();
-            for (var i = 0; i < nums.Length; i++)
-            {
-                stringBuilder.Append(nums[i]);
-                stringBuilder.Append(",");
-            }
-
-            return stringBuilder.ToString();
+            return string.Join(",", nums);
         }
 
         public static void Swap<T>(T[] arr, int i, int j)
